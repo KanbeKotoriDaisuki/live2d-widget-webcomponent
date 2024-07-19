@@ -1,7 +1,8 @@
 {
   "name": "live2d-widget-webcomponent",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A webcomponent for playing live2d models as a widget.",
+  "repository": "https://github.com/KanbeKotoriDaisuki/live2d-widget-webcomponent",
   "scripts": {
     "build": "vite build"
   },
