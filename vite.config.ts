@@ -4,7 +4,7 @@ import solidPlugin from "vite-plugin-solid";
 import dts from "vite-plugin-dts";
 
 export default defineConfig({
-  plugins: [solidPlugin(), dts()],
+  plugins: [solidPlugin(), dts({ rollupTypes: true })],
   server: {
     port: 3030,
   },

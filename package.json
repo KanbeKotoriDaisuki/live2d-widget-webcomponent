@@ -7,14 +7,13 @@
   },
   "exports": {
     ".": {
-      "types": "./dist/src/index.d.ts",
+      "types": "./dist/index.d.ts",
       "import": "./dist/live2d-widget.es.js",
       "require": "./dist/live2d-widget.umd.js"
     }
   },
   "files": [
-    "dist",
-    "types"
+    "dist"
   ],
   "license": "MIT",
   "devDependencies": {
