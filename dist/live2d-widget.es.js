@@ -14704,8 +14704,8 @@ const ap = ({
       view: t,
       autoStart: !0,
       backgroundAlpha: 0,
-      width: e ?? 1e3,
-      height: i ?? 1e3,
+      width: e ?? t.width,
+      height: i ?? t.height,
       antialias: !0
     });
     n().forEach(({

@@ -1,34 +1,28 @@
 ## Usage
 
-Those templates dependencies are maintained via [pnpm](https://pnpm.io) via `pnpm up -Lri`.
+1. Load Live2D Cubism SDK 2.1 (i.e. `live2d.min.js`) which this project depends.
+2. Create an element `<live2d-widget>` with an optional string attribute `config` which consumes a JSON string with type `Live2DWidgetConfig`.
+3. Load `live2d-widget.umd.js` (or `live2d-widget.es.js` at your choice) in `dist` folder.
 
-This is the reason you see a `pnpm-lock.yaml`. That being said, any package manager will work. This file can be safely be removed once you clone a template.
+See the document of `Live2DWidgetConfig` for more details.
 
-```bash
-$ npm install # or pnpm install or yarn install
+### Example Usage
+
+```html
+<div class="widget-container">
+  <live2d-widget
+    config='{"width":1280,"height":1380,"models":[{"src":"https://cdn.jsdelivr.net/gh/guansss/pixi-live2d-display/test/assets/shizuku/shizuku.model.json"}]}'
+  />
+</div>
 ```
 
-### Learn more on the [Solid Website](https://solidjs.com) and come chat with us on our [Discord](https://discord.com/invite/solidjs)
+## Build
 
-## Available Scripts
+Run in terminal
 
-In the project directory, you can run:
-
-### `npm run dev` or `npm start`
-
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br>
-
-### `npm run build`
-
-Builds the app for production to the `dist` folder.<br>
-It correctly bundles Solid in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-## Deployment
-
-You can deploy the `dist` folder to any static host provider (netlify, surge, now, etc.)
+```bash
+# NPM
+npm run build
+# Bun
+bun run build
+```
