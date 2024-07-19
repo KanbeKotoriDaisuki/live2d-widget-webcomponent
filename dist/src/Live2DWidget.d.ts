@@ -1,4 +1,3 @@
-
 export type Live2DWidgetConfig = {
     width?: number;
     height?: number;

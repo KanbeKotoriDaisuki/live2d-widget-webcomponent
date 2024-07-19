@@ -1,10 +1,8 @@
-import "./live2d/live2d.min.js";
-
+import { createEffect, createResource } from "solid-js";
+import { customElement } from "solid-element";
 import { Application } from "@pixi/app";
 import { Ticker } from "@pixi/core";
 import { Live2DModel } from "pixi-live2d-display/cubism2";
-import { createEffect, createResource, createSignal } from "solid-js";
-import { customElement } from "solid-element";
 
 type Live2DWidgetProps = {
   config: string;
@@ -32,53 +30,59 @@ export type Live2DWidgetConfig = {
 
 const Live2DWidget = ({ config }: Live2DWidgetProps) => {
   let ref!: HTMLCanvasElement;
+  let width!: number;
+  let height!: number;
+  let models!: Live2DWidgetConfig["models"];
 
   try {
-    const parsedConfig: Live2DWidgetConfig = JSON.parse(config);
+    ({ width, height, models } = JSON.parse(config));
+  } catch (error) {
+    console.error("Invalid config: `", config, "`");
+    return null;
+  }
 
-    const [models] = createResource(
-      () =>
-        Promise.all(
-          parsedConfig.models.map(async ({ src, ...model }) => ({
-            ...model,
-            live2d: await Live2DModel.from(src, {
-              autoFocus: false,
-              ticker: Ticker.shared,
-            }),
-          }))
-        ),
-      { initialValue: [] }
-    );
+  const [loadedModels] = createResource(
+    () =>
+      Promise.all(
+        models.map(async ({ src, ...model }) => ({
+          ...model,
+          live2d: await Live2DModel.from(src, {
+            autoFocus: false,
+            ticker: Ticker.shared,
+          }),
+        }))
+      ),
+    { initialValue: [] }
+  );
 
-    const [loaded, setLoaded] = createSignal(false);
+  createEffect(() => {
+    if (loadedModels().length === 0 || !ref) return;
 
     const app = new Application({
       view: ref,
       autoStart: true,
       backgroundAlpha: 0,
-      width: 2500,
-      height: 2500,
+      width: width ?? 1000,
+      height: height ?? 1000,
       antialias: true,
     });
-
-    createEffect(() => {
-      if (models().length === 0 || loaded()) return;
-      models().forEach((model) => app.stage.addChild(model.live2d));
-      models().forEach((model) => {
-        model.live2d.x = model.pos?.x ?? 0;
-        model.live2d.y = model.pos?.y ?? 0;
-        model.scale &&
-          model.live2d.scale.set(model.scale.x ?? 1, model.scale.y ?? 1);
-        model.expression && model.live2d.expression(model.expression);
-        model.motion && model.live2d.motion(model.motion);
-      });
-      setLoaded(true);
+    loadedModels().forEach(({ live2d, pos, scale, expression, motion }) => {
+      app.stage.addChild(live2d);
+      live2d.x = pos?.x!;
+      live2d.y = pos?.y ?? 0;
+      scale && live2d.scale.set(scale.x ?? 1, scale.y ?? 1);
+      expression && live2d.expression(expression);
+      motion && live2d.motion(motion);
     });
-  } catch (error) {
-    console.error("Invalid config: `", config, "`");
-  }
+  });
 
-  return <canvas ref={ref} style={{ width: "100%", height: "100%" }} />;
+  return (
+    <canvas
+      id="canvas"
+      ref={ref}
+      style={{ width: "100%", height: "100%", display: "flex" }}
+    />
+  );
 };
 
 customElement("live2d-widget", { config: '{"models":[]}' }, Live2DWidget);
