@@ -1,3 +1,5 @@
+# Live2D Widget Web Component
+
 ## Usage
 
 1. Load Live2D Cubism SDK 2.1 (i.e. `live2d.min.js`) which this project depends.
